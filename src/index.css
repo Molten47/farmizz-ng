@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+:root{
+  --primary-color: #106e5b;
+  --footer-background: #962759;
+  --background-light:#9fd169;
+  --text-light:#FFFFFF;
+  --text-dark:#1E1E2F;
+  --call-to-action:#9fd169;
+  --call-to-action-hover:#00b5b5;
+  
+
+
+  --basic-font:'Sora', sans-serif;
+  --sub-font: 'Rubik Dirt', system-ui;
+  --alt-font:'Inter', sans-serif;
+ 
+}
+
+body, h1, h2, h3, h4, h5, h6, ul {
+    margin: 0;
+    padding: 0
+    
+}
+
+/*body styles */
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Open Sans', 'sans-serif';
+    height: 100vh;
+    width: 100%;
+}
+
+@layer utilities {
+  /* background-colors */
+  .bg-primary{
+    background-color: var(--primary-color);
+    }
+    .bg-cta{
+      background-color: var(--call-to-action);
+    }
+    .bg-light{
+      background-color: var(--background-light);
+    }
+    .bg-cta-hover{
+      background-color: var(--call-to-action-hover);
+    }
+
+  /*text-colors*/
+
+    .text-primary{
+      color: var(--primary-color);
+    }
+    .text-light{
+      color: var(--text-light);
+    }
+    .text-secondary{
+      color: var(--secondary-color);
+    }
+    .text-paragraph{
+    color: var(--paragraph-color);
+    }
+    .text-cta{
+      color: var(--call-to-action);
+    }
+    .text-dark{
+      color: var(--text-dark);
+    }
+
+    /*brand-fonts*/
+
+    .basic-font{
+        font-family: var(--basic-font);
+    }
+    .new-font{
+      font-family: var(--sub-font);
+    }
+    .alt-font{
+      font-family: var(--alt-font);
+    }
+ 
+
+  /*extra-styling*/
+    .img-shadow{
+        filter: drop-shadow(40px 50px 25px #0f1115);
+    }
+    .img-shadow2{
+        filter: drop-shadow(40px 50px 25px #3030307a);
+    }
+    
+}
+
