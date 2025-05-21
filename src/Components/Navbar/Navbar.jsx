@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { Link } from 'react-router-dom';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -69,9 +69,12 @@ const Navbar = () => {
             <li className='hover:text-[#ff8c33] text-[1.1rem] cursor-pointer transition-colors duration-300'>Contact Us</li>
           </ul>
           <div className='mt-6'>
+            <Link to='/signup'>
             <button className='bg-[#ff8c33] w-full text-[1.1rem] basic-font hover:bg-[#e67d2e] text-white font-bold py-2 px-6 rounded-lg transition-all duration-300 shadow-md'>
               Start
             </button>
+            </Link>
+         
           </div>
         </div>
       )}

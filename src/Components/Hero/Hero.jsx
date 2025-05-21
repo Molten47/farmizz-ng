@@ -2,6 +2,7 @@ import React from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import Navbar from '../Navbar/Navbar';
 import backVideo from '../../assets/Goodvideo.mp4';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
@@ -35,9 +36,12 @@ const Hero = () => {
             for a healthier community and planet.
           </p>
           <div className='flex flex-col sm:flex-row gap-4 md:gap-6 justify-center mt-4'>
-            <button className='bg-[#ff8c33] hover:bg-[#e67d2e] text-white font-bold py-2 md:py-3 basic-font px-6 md:px-8 rounded-lg transition-all duration-300 shadow-lg text-base md:text-lg'>
+            <Link to='/signup'>
+             <button className='bg-[#ff8c33] hover:bg-[#e67d2e] text-white font-bold py-2 md:py-3 basic-font px-6 md:px-8 rounded-lg transition-all duration-300 shadow-lg text-base md:text-lg'>
               Get Started
             </button>
+            </Link>
+           
             <button className='bg-white/20 basic-font hover:bg-white/30 backdrop-blur-sm border border-white/50 text-white font-bold py-2 md:py-3 px-6 md:px-8 rounded-lg transition-all duration-300 shadow-lg text-base md:text-lg'>
               Learn More
             </button>

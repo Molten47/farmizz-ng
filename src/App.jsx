@@ -4,6 +4,8 @@ import Signin from './Components/Sign In/Signin';
 import Signup from './Components/Sign Up/Signip';
 import Landing from './Components/Landing Page/Landing';
 import SignupSuccess from './Components/SignUpSuccess/Success';
+import FarmizzDashboard from './Pages/Dashboard/Dashboard';
+
 
 
 const App = () => {
@@ -18,6 +20,7 @@ const App = () => {
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/signin" element={<Signin />} />
                      <Route path="/success" element={<SignupSuccess />} />
+                     <Route path='/dashboard' element={<FarmizzDashboard/>}/>
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </div>

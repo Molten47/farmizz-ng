@@ -89,7 +89,7 @@ const Signin = () => {
         {/* Welcome Message */}
         <div className="text-center mb-6 md:mb-8">
           <h1 className="text-2xl md:text-3xl font-bold text-primary basic-font">Welcome Back!</h1>
-          <p className="mt-1 md:mt-2 text-[#6B7280] basic-font text-sm">Let's get back to work</p>
+          <p className="mt-1 md:mt-2 text-[#6B7280] basic-font text-sm">Let's get back to business</p>
         </div>
 
         {/* Log in Form */}

@@ -62,7 +62,7 @@ const Signup = () => {
 
     try {
       const response = await axios.post(
-        'http://192.168.0.134:5000/api/signup', // Full URL of your Flask backend
+        ' http://172.20.10.6:5000/api/signup', // Full URL of your Flask backend
         {
           email: formData.email,
           password: formData.password,
@@ -101,7 +101,7 @@ const Signup = () => {
       <div className="bg-white rounded-lg shadow-lg p-8 w-full sm:max-w-md md:max-w-lg lg:max-w-xl">
         {/* Welcome Message */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl sm:text-2xl font-bold text-primary basic-font">Welcome to Lancer.ai</h1>
+          <h1 className="text-3xl sm:text-2xl font-bold text-primary basic-font">Welcome to Farmizz</h1>
           <p className="mt-2 text-[#6B7280] basic-font">Sign up to get started with your new account</p>
         </div>
 
@@ -198,7 +198,7 @@ const Signup = () => {
           <div>
             <button
               type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-cta hover:bg-[#00b5b5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 basic-font"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-cta hover:bg-[#106e5b] hover:bg-[#00b5b5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 basic-font"
             >
               Sign Up
             </button>
