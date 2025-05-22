@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { 
   Sidebar, 
   Bell, 
@@ -23,10 +23,38 @@ import {
   AlertCircle
 } from 'lucide-react'
 import { motion } from 'framer-motion'
-
+import WeatherWidget from '../WeatherWidget/Weatherwidget'
+import WeatherDashboard from '../Weather/Weather'
+import CropView from '../CropView/CropView'
+import MarketPlace from '../Market/MarketView'
+import FarmerForum from '../FarmerForum/Forum'
+import Analytics from '../AnalyticsView/Analytics'
+import Resources from '../Resoursec/Resources'
 // Dashboard component with all the required sections
 const DashboardView = () => {
   const [isNewsletterSubscribed, setIsNewsletterSubscribed] = useState(false)
+// In the DashboardView component, add state for location
+const [location, setLocation] = useState({ 
+  lat: 40.7128, // Default fallback (New York)
+  lon: -74.0060
+});
+
+useEffect(() => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          lat: position.coords.latitude,
+          lon: position.coords.longitude
+        });
+      },
+      (error) => {
+        console.error("Error getting location:", error);
+        // Keep using default coordinates
+      }
+    );
+  }
+}, []);
   
   return (
     <div className="p-6 basic-font">
@@ -55,7 +83,7 @@ const DashboardView = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-              <button className="flex items-center justify-center gap-2 bg-primary hover:bg-green-700 text-white py-2 px-4 rounded-lg transition-colors">
+              <button className="flex items-center justify-center gap-2 bg-serial hover:bg-green-700 text-white py-2 px-4 rounded-lg transition-colors">
                 <Leaf size={18} />
                 <span>Set Up My Farm</span>
               </button>
@@ -194,56 +222,7 @@ const DashboardView = () => {
         {/* Right column  */}
         <div className="space-y-6">
           {/* Weather widget */}
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-sm p-6 text-white">
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="font-semibold text-lg">Today's Weather</h3>
-                <p className="text-blue-100">Tuesday, May 20</p>
-              </div>
-              <Sun size={36} className="text-yellow-300" />
-            </div>
-            
-            <div className="mt-6 flex items-center">
-              <span className="text-4xl font-bold">75°F</span>
-              <span className="ml-2 text-blue-100">Sunny</span>
-            </div>
-            
-            <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-              <div>
-                <p className="text-blue-100 text-xs">Humidity</p>
-                <p className="font-medium">45%</p>
-              </div>
-              <div>
-                <p className="text-blue-100 text-xs">Wind</p>
-                <p className="font-medium">8 mph</p>
-              </div>
-              <div>
-                <p className="text-blue-100 text-xs">Rainfall</p>
-                <p className="font-medium">0 in</p>
-              </div>
-            </div>
-            
-            <div className="mt-4 pt-4 border-t border-blue-400">
-              <h4 className="text-sm font-medium mb-2">3-Day Forecast</h4>
-              <div className="grid grid-cols-3 gap-2 text-center">
-                <div>
-                  <p className="text-xs">Wed</p>
-                  <Cloud size={18} className="mx-auto my-1" />
-                  <p className="text-sm">72°F</p>
-                </div>
-                <div>
-                  <p className="text-xs">Thu</p>
-                  <Sun size={18} className="mx-auto my-1" />
-                  <p className="text-sm">78°F</p>
-                </div>
-                <div>
-                  <p className="text-xs">Fri</p>
-                  <Cloud size={18} className="mx-auto my-1" />
-                  <p className="text-sm">74°F</p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <WeatherWidget location={location} />
           
           {/* notifications center*/}
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
@@ -346,12 +325,45 @@ const DashboardView = () => {
 }
 
 // Empty placeholder components
-const ResourcesView = () => <div className="p-6"></div>
-const WeatherView = () => <div className="p-6"></div>
-const CropsView = () => <div className="p-6"></div>
-const MarketView = () => <div className="p-6"></div>
-const ForumView = () => <div className="p-6"></div>
-const AnalyticsView = () => <div className="p-6"></div>
+const ResourcesView = () => <div className="p-6">
+  <Resources/>
+</div>
+const WeatherView = () => {
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  
+  const handleLocationSelect = (locationData) => {
+    setSelectedLocation(locationData);
+    // You can do additional things with the selected location here
+    console.log('Selected location:', locationData);
+  };
+  return (
+    <div className="p-6">
+      <WeatherDashboard onLocationSelect={handleLocationSelect} />
+      
+      {/* Optionally display selected location info */}
+      {selectedLocation && (
+        <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+          <h4 className="font-semibold">Selected Location Details</h4>
+          <p>Location: {selectedLocation.location.name}</p>
+          <p>Temperature: {selectedLocation.data.values.temperature}°C</p>
+        </div>
+      )}
+    </div>
+  );
+};
+  
+const CropsView = () => <div className="p-6">
+  <CropView/>
+</div>
+const MarketView = () => <div className="p-6">
+<MarketPlace/>
+</div>
+const ForumView = () => <div className="p-6">
+<FarmerForum/>
+</div>
+const AnalyticsView = () => <div className="p-6">
+<Analytics/>
+</div>
 const SettingsView = () => <div className="p-6"></div>
 const HelpView = () => <div className="p-6"></div>
 
