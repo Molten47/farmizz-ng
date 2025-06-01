@@ -9,7 +9,7 @@ const FarmerForum = () => {
       content: "Looking for natural ways to deal with aphids and whiteflies on my tomato plants. Chemical pesticides are affecting the beneficial insects in my garden.",
       author: "GreenThumb_Mike",
       category: "Pest Control",
-      tags: ["organic", "tomatoes", "aphids"],
+      tags: ["organic", "tomatoes", "aphids", "natural-solutions-for-garden"], // Added a longer tag for testing
       likes: 23,
       comments: 12,
       timestamp: "2 hours ago",
@@ -83,25 +83,25 @@ const FarmerForum = () => {
   });
 
   const categories = [
-    "All", "Pest Control", "Irrigation", "Soil Management", 
+    "All", "Pest Control", "Irrigation", "Soil Management",
     "Crop Management", "Livestock", "Equipment", "Marketing", "Weather"
   ];
 
   const filteredThreads = threads.filter(thread => {
     const matchesCategory = selectedCategory === "All" || thread.category === selectedCategory;
-    
+
     if (!searchTerm.trim()) {
       return matchesCategory;
     }
-    
+
     const searchLower = searchTerm.toLowerCase();
-    const matchesSearch = 
+    const matchesSearch =
       thread.title.toLowerCase().includes(searchLower) ||
       thread.content.toLowerCase().includes(searchLower) ||
       thread.author.toLowerCase().includes(searchLower) ||
       thread.category.toLowerCase().includes(searchLower) ||
       thread.tags.some(tag => tag.toLowerCase().includes(searchLower));
-    
+
     return matchesCategory && matchesSearch;
   });
 
@@ -111,10 +111,10 @@ const FarmerForum = () => {
   }, [filteredThreads.length]);
 
   const handleLike = (threadId) => {
-    setThreads(threads.map(thread => 
-      thread.id === threadId 
-        ? { 
-            ...thread, 
+    setThreads(threads.map(thread =>
+      thread.id === threadId
+        ? {
+            ...thread,
             isLiked: !thread.isLiked,
             likes: thread.isLiked ? thread.likes - 1 : thread.likes + 1
           }
@@ -149,13 +149,9 @@ const FarmerForum = () => {
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm border border-green-100 p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
-           
-            <div className="flex items-center space-x-4">
-      
-              
-            </div>
+            {/* Removed the commented out bell/user icon as they were empty */}
           </div>
-          
+
           {/* Search and Filter Bar */}
           <div className="flex items-center space-x-4">
             <div className="relative flex-1">
@@ -192,19 +188,20 @@ const FarmerForum = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Sidebar - Categories */}
+          {/* Sidebar - Categories & Popular Tags */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-sm border border-green-100 p-4 sticky top-4">
               <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
                 <Filter className="w-4 h-4 mr-2" />
                 Categories
               </h3>
-              <div className="space-y-1">
+              {/* Added hidden-scrollbar to categories */}
+              <div className="space-y-1 overflow-x-auto hidden-scrollbar">
                 {categories.map(category => (
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                    className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors whitespace-nowrap ${ // Added whitespace-nowrap
                       selectedCategory === category
                         ? 'bg-green-100 text-green-700 font-medium'
                         : 'text-gray-600 hover:bg-gray-50'
@@ -214,15 +211,16 @@ const FarmerForum = () => {
                   </button>
                 ))}
               </div>
-              
+
               <div className="mt-6 pt-4 border-t border-gray-200">
                 <h4 className="font-medium text-gray-700 mb-3 flex items-center">
                   <TrendingUp className="w-4 h-4 mr-2" />
                   Popular Tags
                 </h4>
-                <div className="flex flex-wrap gap-2">
-                  {["organic", "irrigation", "pest-control", "soil", "livestock"].map(tag => (
-                    <span key={tag} className="bg-green-50 text-green-700 px-2 py-1 rounded-full text-xs cursor-pointer hover:bg-green-100">
+                {/* Added overflow-x-auto and hidden-scrollbar to tags container */}
+                <div className="flex flex-wrap gap-2 overflow-x-auto hidden-scrollbar">
+                  {["organic", "irrigation", "pest-control", "soil", "livestock", "farm-management-tips", "seasonal-planting-guide"].map(tag => ( // Added longer tags for demonstration
+                    <span key={tag} className="bg-green-50 text-green-700 px-2 py-1 rounded-full text-xs cursor-pointer hover:bg-green-100 whitespace-nowrap"> {/* Added whitespace-nowrap */}
                       #{tag}
                     </span>
                   ))}
@@ -241,8 +239,8 @@ const FarmerForum = () => {
                     {searchTerm ? `No results found for "${searchTerm}"` : "No discussions found"}
                   </h3>
                   <p className="text-gray-500">
-                    {searchTerm 
-                      ? "Try using different keywords or check your spelling" 
+                    {searchTerm
+                      ? "Try using different keywords or check your spelling"
                       : "Try adjusting your category filter"}
                   </p>
                   {searchTerm && (
@@ -259,53 +257,53 @@ const FarmerForum = () => {
                   <div key={thread.id} className="bg-white rounded-lg shadow-sm border border-green-100 p-6 hover:shadow-md transition-shadow">
                     <div className="flex items-start space-x-4">
                       <div className="text-2xl">{thread.avatar}</div>
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0"> {/* Added min-w-0 here */}
                         <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <h3 className="font-semibold text-gray-800 text-lg mb-1 hover:text-green-700 cursor-pointer">
+                          <div className="min-w-0"> {/* Added min-w-0 here */}
+                            <h3 className="font-semibold text-gray-800 text-lg mb-1 hover:text-green-700 cursor-pointer truncate"> {/* Added truncate */}
                               {thread.title}
                             </h3>
-                            <div className="flex items-center space-x-3 text-sm text-gray-500 mb-2">
-                              <span className="flex items-center">
+                            <div className="flex items-center space-x-3 text-sm text-gray-500 mb-2 overflow-x-auto hidden-scrollbar"> {/* Added overflow-x-auto and hidden-scrollbar here */}
+                              <span className="flex items-center whitespace-nowrap"> {/* Added whitespace-nowrap */}
                                 <User className="w-3 h-3 mr-1" />
                                 {thread.author}
                               </span>
-                              <span className="flex items-center">
+                              <span className="flex items-center whitespace-nowrap"> {/* Added whitespace-nowrap */}
                                 <Calendar className="w-3 h-3 mr-1" />
                                 {thread.timestamp}
                               </span>
-                              <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs">
+                              <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs whitespace-nowrap"> {/* Added whitespace-nowrap */}
                                 {thread.category}
                               </span>
                             </div>
                           </div>
                         </div>
-                        
-                        <p className="text-gray-700 mb-4 leading-relaxed">{thread.content}</p>
-                        
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-4">
+
+                        <p className="text-gray-700 mb-4 leading-relaxed break-words">{thread.content}</p> {/* Added break-words */}
+
+                        <div className="flex items-center justify-between overflow-x-auto hidden-scrollbar"> {/* Added overflow-x-auto and hidden-scrollbar here */}
+                          <div className="flex items-center space-x-4 flex-shrink-0"> {/* Added flex-shrink-0 */}
                             <button
                               onClick={() => handleLike(thread.id)}
                               className={`flex items-center space-x-1 transition-colors ${
-                                thread.isLiked 
-                                  ? 'text-red-500 hover:text-red-600' 
+                                thread.isLiked
+                                  ? 'text-red-500 hover:text-red-600'
                                   : 'text-gray-500 hover:text-red-500'
                               }`}
                             >
                               <Heart className={`w-4 h-4 ${thread.isLiked ? 'fill-current' : ''}`} />
                               <span className="font-medium">{thread.likes}</span>
                             </button>
-                            
+
                             <button className="flex items-center space-x-1 text-gray-500 hover:text-blue-600 transition-colors">
                               <MessageCircle className="w-4 h-4" />
                               <span className="font-medium">{thread.comments}</span>
                             </button>
                           </div>
-                          
-                          <div className="flex items-center space-x-2">
+
+                          <div className="flex items-center space-x-2 flex-shrink-0"> {/* Added flex-shrink-0 */}
                             {thread.tags.map(tag => (
-                              <span key={tag} className="bg-green-50 text-green-700 px-2 py-1 rounded-full text-xs flex items-center">
+                              <span key={tag} className="bg-green-50 text-green-700 px-2 py-1 rounded-full text-xs flex items-center whitespace-nowrap"> {/* Added whitespace-nowrap */}
                                 <Tag className="w-3 h-3 mr-1" />
                                 {tag}
                               </span>
@@ -327,7 +325,7 @@ const FarmerForum = () => {
             <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-90vh overflow-y-auto">
               <div className="p-6">
                 <h2 className="text-xl font-bold text-gray-800 mb-4">Ask a Question</h2>
-                
+
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
@@ -339,7 +337,7 @@ const FarmerForum = () => {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
                     <select
@@ -352,7 +350,7 @@ const FarmerForum = () => {
                       ))}
                     </select>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
                     <textarea
@@ -363,7 +361,7 @@ const FarmerForum = () => {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Tags</label>
                     <input
@@ -375,7 +373,7 @@ const FarmerForum = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="flex justify-end space-x-4 mt-6">
                   <button
                     onClick={() => setShowNewThreadModal(false)}

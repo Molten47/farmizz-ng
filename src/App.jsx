@@ -12,8 +12,7 @@ const App = () => {
  
 
     return (
-        <Router> 
-        
+        <Router basename='/farmizz-ng'>
             <div>
                 <Routes>
                     <Route path="/" element={<Landing />} /> 

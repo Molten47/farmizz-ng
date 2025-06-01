@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Lock, AlertCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useGoogleLogin } from '@react-oauth/google';
-import axios from 'axios';
+
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -61,8 +60,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await axios.post(
-        ' http://172.20.10.6:5000/api/signup', // Full URL of your Flask backend
+      const response = await(
         {
           email: formData.email,
           password: formData.password,
@@ -82,19 +80,9 @@ const Signup = () => {
     }
   };
 
-  const googleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      // ... (Your Google Sign-In logic remains the same)
-    },
-    onError: (error) => {
-      // ... (Your Google Sign-In error handling remains the same)
-    },
-  });
 
 
-  const handleGoogleSignIn = () => {
-    googleLogin();
-  };
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
@@ -218,7 +206,7 @@ const Signup = () => {
         {/* Google Sign In Button */}
         <div className="mt-6">
           <button
-            onClick={handleGoogleSignIn}
+            
             className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 basic-font"
           >
             <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">

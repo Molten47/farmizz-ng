@@ -11,21 +11,6 @@ const ResourcesView = () => {
   const resources = [
     {
       id: 1,
-      title: "Complete Guide to Organic Composting for Maximum Yield",
-      type: "article",
-      category: "soil-management",
-      excerpt: "Learn the fundamentals of creating nutrient-rich compost that will boost your crop yields naturally. This comprehensive guide covers everything from basic composting principles to advanced techniques.",
-      author: "Dr. Sarah Martinez",
-      date: "2024-05-15",
-      readTime: "12 min read",
-      views: 2847,
-      likes: 156,
-      tags: ["composting", "organic", "soil-health", "sustainability"],
-      thumbnail: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=250&fit=crop",
-      featured: true
-    },
-    {
-      id: 2,
       title: "Precision Irrigation: Smart Water Management Techniques",
       type: "video",
       category: "irrigation",
@@ -168,11 +153,11 @@ const ResourcesView = () => {
   };
 
   const filteredResources = resources.filter(resource => {
-    const matchesSearch = resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  const matchesSearch = resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          resource.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          resource.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesCategory = selectedCategory === 'all' || resource.category === selectedCategory;
-    const matchesType = selectedType === 'all' || resource.type === selectedType;
+  const matchesCategory = selectedCategory === 'all' || resource.category === selectedCategory;
+  const matchesType = selectedType === 'all' || resource.type === selectedType;
     
     return matchesSearch && matchesCategory && matchesType;
   });
@@ -222,7 +207,7 @@ const ResourcesView = () => {
               />
             </div>
             
-            <div className="flex gap-4">
+            <div className="flex flex-col lg:flex-row gap-4">
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}

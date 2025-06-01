@@ -250,7 +250,7 @@ const CropsView = () => {
     <div className="max-w-7xl mx-auto p-6 bg-white">
       {/* Navigation Tabs */}
       <div className="border-b border-gray-200 mb-6">
-        <nav className="-mb-px flex space-x-8">
+        <nav className="-mb-px flex space-x-8 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none scrollbar-hide pb-2">
           <button
             onClick={() => setActiveTab('crops')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${

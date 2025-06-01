@@ -368,50 +368,68 @@ const SettingsView = () => <div className="p-6"></div>
 const HelpView = () => <div className="p-6"></div>
 
 const FarmizzDashboard = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false) // Closed by default
   const [activeView, setActiveView] = useState('dashboard')
   const [isSeasonDropdownOpen, setSeasonDropdownOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 1024
+      setIsMobile(mobile)
+      
+      if (!mobile) {
+        // On desktop, sidebar can be toggled but starts closed
+        // Keep current state
+      } else {
+        // On mobile, sidebar starts closed
+        setIsSidebarOpen(false)
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen)
-  }
-  
-  // Handle menu item clicks
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   const handleMenuClick = (view) => {
-    setActiveView(view)
+    setActiveView(view);
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
+  };
+
+  const handleOverlayClick = () => {
+    if (isMobile) {
+      setIsSidebarOpen(false)
+    }
   }
 
   const renderView = () => {
     switch(activeView) {
-      case 'dashboard':
-        return <DashboardView />
-      case 'resources':
-        return <ResourcesView />
-      case 'weather':
-        return <WeatherView />
-      case 'crops':
-        return <CropsView />
-      case 'market':
-        return <MarketView />
-      case 'forum':
-        return <ForumView />
-      case 'analytics':
-        return <AnalyticsView />
-      case 'settings':
-        return <SettingsView />
-      case 'help':
-        return <HelpView />
-      default:
-        return <DashboardView />
+      case 'dashboard': return <DashboardView />
+      case 'resources': return <ResourcesView />
+      case 'weather': return <WeatherView /> 
+      case 'crops': return <CropsView />
+      case 'market': return <MarketView />
+      case 'forum': return <ForumView />
+      case 'analytics': return <AnalyticsView />
+      case 'settings': return <SettingsView />
+      case 'help': return <HelpView />
+      default: return <DashboardView />
     }
   }
 
   return (
-    <div className="flex flex-col w-full min-h-screen overflow-hidden bg-white basic-font">
+    <div className="flex flex-col w-full min-h-screen overflow-hidden bg-gray-50 basic-font">
       {/* Navigation bar */}
-      <nav className="w-full py-3 px-6 flex justify-between items-center border-b border-gray-200">
-        <div className="flex items-center w-[20%] gap-6">
-          {/* Brand icon - farm leaf animated */}
+      <nav className="w-full py-3 px-6 flex flex-col lg:flex-row justify-between items-center border-b border-gray-200 gap-4 lg:gap-0 bg-white">
+        <div className="flex items-center w-full lg:w-[20%] gap-6 justify-between lg:justify-start">
           <div className="flex items-center gap-2 pl-3">
             <div className="flex items-center gap-1">
               <motion.div className="w-3 h-3 rounded-full bg-green-800"
@@ -445,26 +463,28 @@ const FarmizzDashboard = () => {
               ></motion.div>
             </div>
           </div>
-          <button 
-            onClick={toggleSidebar} 
-            className="p-2 hover:bg-gray-100 text-gray-700 rounded-full transition-colors"
-            aria-label="Toggle sidebar"
-          >
-            <Sidebar size={20} />
-          </button>
-          <div className="flex flex-row gap-0">
-            <ChevronLeft/>
-            <ChevronRight/>
+          
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={toggleSidebar} 
+              className="p-2 hover:bg-gray-100 text-gray-700 rounded-full transition-colors"
+              aria-label="Toggle sidebar"
+            >
+              <Sidebar size={20} />
+            </button>
+            <div className="hidden lg:flex flex-row gap-0">
+              <ChevronLeft/>
+              <ChevronRight/>
+            </div>
           </div>
         </div>
         
-        <div className="flex flex-row w-[70%] gap-2 justify-center items-center">
+        <div className="flex flex-row w-full lg:w-[70%] gap-2 justify-center items-center">
           <Sun size={20} className="text-amber-500"/>
-          <div className="relative w-4/6 justify-center items-center">
+          <div className="relative w-full lg:w-4/6 justify-center items-center">
             <div className="absolute inset-y-0 left-3 flex justify-center items-center pointer-events-none">
               <Cloud size={14} className="text-gray-400" />
             </div>
-            {/* Search Input */}
             <input 
               type="search"
               placeholder="Search Farmizz..."
@@ -473,51 +493,68 @@ const FarmizzDashboard = () => {
           </div>
         </div>
         
-        <div className="w-[10%] pl-10 flex flex-row gap-4 justify-center items-center">
+        <div className="w-full lg:w-[10%] lg:pl-10 flex flex-row gap-4 justify-center lg:justify-center items-center">
           <Calendar className="text-gray-600" />
           <ShoppingCart className="text-gray-600" />
         </div>
       </nav>
 
-      {/* Main content area with sidebar */}
-      <div className="flex flex-1 w-full overflow-hidden">
+      <div className="flex flex-1 w-full overflow-hidden relative">
+          {isMobile && isSidebarOpen && (
+          <div 
+            className="fixed bg-white bg-opacity-60"
+            style={{ 
+              top: '73px', 
+              left: 0, 
+              right: 0, 
+              bottom: 0 
+            }}
+            onClick={handleOverlayClick}
+          />
+        )}
         {/* Sidebar */}
-        <aside className={`${isSidebarOpen ? 'w-64' : 'w-0'} border-r border-gray-200 flex flex-col transition-all duration-300 overflow-hidden`}>
-           <div className='font-bold new-font text-2xl md:text-[34px] px-4 py-2'>
+        <aside className={`
+          ${isSidebarOpen ? 'w-64' : 'w-0'}
+          ${isMobile ? 'fixed' : 'absolute'}
+          ${isMobile ? 'shadow-xl' : ''}
+          ${isMobile && isSidebarOpen ? 'z-50' : ''}
+          
+          border-r border-gray-200 bg-white flex flex-col transition-all duration-300 overflow-hidden
+        `}style={isMobile ? { top: '73px', height: 'calc(100vh - 73px)' } : {}}>
+          <div className='font-bold text-2xl md:text-[34px] new-font px-4 py-2'>
             <h1>Farm<span className='text-[#ff8c33]'>izz</span></h1>
           </div>
           
-          <nav className="flex-1 px-2 py-4 space-y-1">
+          <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
             <a 
               href="#" 
               onClick={(e) => {e.preventDefault(); handleMenuClick('dashboard')}}
-              className={`flex items-center px-4 py-4 font-medium text-dark hover:bg-green-50 rounded-md relative group ${activeView === 'dashboard' ? 'bg-green-50' : ''}`}
+              className={`flex items-center px-4 py-4 font-medium text-gray-700 hover:bg-green-50 rounded-md relative group ${activeView === 'dashboard' ? 'bg-green-50' : ''}`}
             >
               <div className={`absolute left-0 w-1 h-full bg-green-600 rounded-r-md ${activeView === 'dashboard' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}></div>
-              <Home size={20} className={`mr-3 ${activeView === 'dashboard' ? 'text-primary' : 'text-gray-400 group-hover:text-[#9fd169]'} transition-colors`} />
-              <span className={`${activeView === 'dashboard' ? 'text-primary' : 'group-hover:text-[#9fd169]'} transition-colors`}>Dashboard</span>
+              <Home size={20} className={`mr-3 ${activeView === 'dashboard' ? 'text-green-600' : 'text-gray-400 group-hover:text-green-600'} transition-colors`} />
+              <span className={`${activeView === 'dashboard' ? 'text-green-600' : 'group-hover:text-green-600'} transition-colors`}>Dashboard</span>
             </a>
             
             <a 
               href="#" 
               onClick={(e) => {e.preventDefault(); handleMenuClick('weather')}}
-              className={`flex items-center px-4 py-4 font-medium text-dark hover:bg-green-50 rounded-md transition-colors relative group ${activeView === 'weather' ? 'bg-green-50' : ''}`}
+              className={`flex items-center px-4 py-4 font-medium text-gray-700 hover:bg-green-50 rounded-md transition-colors relative group ${activeView === 'weather' ? 'bg-green-50' : ''}`}
             >
               <div className={`absolute left-0 w-1 h-full bg-green-600 rounded-r-md ${activeView === 'weather' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}></div>
-              <Cloud size={20} className={`mr-3 ${activeView === 'weather' ? 'text-primary' : 'text-gray-400 group-hover:text-[#9fd169]'} transition-colors`} />
-              <span className={`${activeView === 'weather' ? 'text-primary' : 'group-hover:text-[#9fd169]'} transition-colors`}>Weather</span>
+              <Cloud size={20} className={`mr-3 ${activeView === 'weather' ? 'text-green-600' : 'text-gray-400 group-hover:text-green-600'} transition-colors`} />
+              <span className={`${activeView === 'weather' ? 'text-green-600' : 'group-hover:text-green-600'} transition-colors`}>Weather</span>
             </a>
          
-            {/* Seasons with dropdown */}
             <div>
               <button 
                 onClick={() => setSeasonDropdownOpen(!isSeasonDropdownOpen)} 
-                className="w-full flex items-center justify-between px-4 py-4 font-medium text-dark hover:bg-green-50 rounded-md transition-colors relative group"
+                className="w-full flex items-center justify-between px-4 py-4 font-medium text-gray-700 hover:bg-green-50 rounded-md transition-colors relative group"
               >
                 <div className="flex items-center">
                   <div className="absolute left-0 w-1 h-full bg-green-600 rounded-r-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <Calendar size={20} className="mr-3 text-gray-400 group-hover:text-green-700 transition-colors" />
-                  <span className="group-hover:text-[#9fd169] transition-colors">Seasons</span>
+                  <Calendar size={20} className="mr-3 text-gray-400 group-hover:text-green-600 transition-colors" />
+                  <span className="group-hover:text-green-600 transition-colors">Seasons</span>
                 </div>
                 {isSeasonDropdownOpen ? 
                   <ChevronUp size={16} className="text-gray-400" /> : 
@@ -525,7 +562,6 @@ const FarmizzDashboard = () => {
                 }
               </button>
               
-              {/* Seasons dropdown items */}
               {isSeasonDropdownOpen && (
                 <div className="ml-10 space-y-1 mt-1">
                   <a href="#" className="flex items-center px-4 py-3 rounded-md bg-green-600 text-white">
@@ -541,52 +577,52 @@ const FarmizzDashboard = () => {
             <a 
               href="#" 
               onClick={(e) => {e.preventDefault(); handleMenuClick('crops')}}
-              className={`flex items-center px-4 py-4 font-medium text-dark hover:bg-green-50 rounded-md transition-colors relative group ${activeView === 'crops' ? 'bg-green-50' : ''}`}
+              className={`flex items-center px-4 py-4 font-medium text-gray-700 hover:bg-green-50 rounded-md transition-colors relative group ${activeView === 'crops' ? 'bg-green-50' : ''}`}
             >
               <div className={`absolute left-0 w-1 h-full bg-green-600 rounded-r-md ${activeView === 'crops' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}></div>
-              <Leaf size={20} className={`mr-3 ${activeView === 'crops' ? 'text-primary' : 'text-gray-400 group-hover:text-[#9fd169]'} transition-colors`} />
-              <span className={`${activeView === 'crops' ? 'text-primary' : 'group-hover:text-[#9fd169]'} transition-colors`}>My Crops</span>
+              <Leaf size={20} className={`mr-3 ${activeView === 'crops' ? 'text-green-600' : 'text-gray-400 group-hover:text-green-600'} transition-colors`} />
+              <span className={`${activeView === 'crops' ? 'text-green-600' : 'group-hover:text-green-600'} transition-colors`}>My Crops</span>
             </a>
             
             <a 
               href="#" 
               onClick={(e) => {e.preventDefault(); handleMenuClick('market')}}
-              className={`flex items-center px-4 py-4 font-medium text-dark hover:bg-green-50 rounded-md transition-colors relative group ${activeView === 'market' ? 'bg-green-50' : ''}`}
+              className={`flex items-center px-4 py-4 font-medium text-gray-700 hover:bg-green-50 rounded-md transition-colors relative group ${activeView === 'market' ? 'bg-green-50' : ''}`}
             >
               <div className={`absolute left-0 w-1 h-full bg-green-600 rounded-r-md ${activeView === 'market' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}></div>
-              <ShoppingCart size={20} className={`mr-3 ${activeView === 'market' ? 'text-primary' : 'text-gray-400 group-hover:text-[#9fd169]'} transition-colors`} />
-              <span className={`${activeView === 'market' ? 'text-primary' : 'group-hover:text-[#9fd169]'} transition-colors`}>Market</span>
+              <ShoppingCart size={20} className={`mr-3 ${activeView === 'market' ? 'text-green-600' : 'text-gray-400 group-hover:text-green-600'} transition-colors`} />
+              <span className={`${activeView === 'market' ? 'text-green-600' : 'group-hover:text-green-600'} transition-colors`}>Market</span>
             </a>
             
             <a 
               href="#" 
               onClick={(e) => {e.preventDefault(); handleMenuClick('forum')}}
-              className={`flex items-center px-4 py-4 font-medium text-dark hover:bg-green-50 rounded-md transition-colors relative group ${activeView === 'forum' ? 'bg-green-50' : ''}`}
+              className={`flex items-center px-4 py-4 font-medium text-gray-700 hover:bg-green-50 rounded-md transition-colors relative group ${activeView === 'forum' ? 'bg-green-50' : ''}`}
             >
               <div className={`absolute left-0 w-1 h-full bg-green-600 rounded-r-md ${activeView === 'forum' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}></div>
-              <MessageCircle size={20} className={`mr-3 ${activeView === 'forum' ? 'text-primary' : 'text-gray-400 group-hover:text-[#9fd169]'} transition-colors`} />
-              <span className={`${activeView === 'forum' ? 'text-primary' : 'group-hover:text-[#9fd169]'} transition-colors`}>Farmer Forum</span>
+              <MessageCircle size={20} className={`mr-3 ${activeView === 'forum' ? 'text-green-600' : 'text-gray-400 group-hover:text-green-600'} transition-colors`} />
+              <span className={`${activeView === 'forum' ? 'text-green-600' : 'group-hover:text-green-600'} transition-colors`}>Farmer Forum</span>
               <span className="ml-auto flex items-center justify-center w-5 h-5 bg-green-500 text-white text-xs font-bold rounded-full">5</span>
             </a>
             
             <a 
               href="#" 
               onClick={(e) => {e.preventDefault(); handleMenuClick('analytics')}}
-              className={`flex items-center px-4 py-4 font-medium text-dark hover:bg-green-50 rounded-md transition-colors relative group ${activeView === 'analytics' ? 'bg-green-50' : ''}`}
+              className={`flex items-center px-4 py-4 font-medium text-gray-700 hover:bg-green-50 rounded-md transition-colors relative group ${activeView === 'analytics' ? 'bg-green-50' : ''}`}
             >
               <div className={`absolute left-0 w-1 h-full bg-green-600 rounded-r-md ${activeView === 'analytics' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}></div>
-              <BarChart2 size={20} className={`mr-3 ${activeView === 'analytics' ? 'text-primary' : 'text-gray-400 group-hover:text-[#9fd169]'} transition-colors`} />
-              <span className={`${activeView === 'analytics' ? 'text-primary' : 'group-hover:text-[#9fd169]'} transition-colors`}>Farm Analytics</span>
+              <BarChart2 size={20} className={`mr-3 ${activeView === 'analytics' ? 'text-green-600' : 'text-gray-400 group-hover:text-green-600'} transition-colors`} />
+              <span className={`${activeView === 'analytics' ? 'text-green-600' : 'group-hover:text-green-600'} transition-colors`}>Farm Analytics</span>
             </a>
             
             <a 
               href="#" 
               onClick={(e) => {e.preventDefault(); handleMenuClick('resources')}}
-              className={`flex items-center px-4 py-4 font-medium text-dark hover:bg-green-50 rounded-md transition-colors relative group ${activeView === 'resources' ? 'bg-green-50' : ''}`}
+              className={`flex items-center px-4 py-4 font-medium text-gray-700 hover:bg-green-50 rounded-md transition-colors relative group ${activeView === 'resources' ? 'bg-green-50' : ''}`}
             >
               <div className={`absolute left-0 w-1 h-full bg-green-600 rounded-r-md ${activeView === 'resources' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}></div>
-              <BookOpen size={20} className={`mr-3 ${activeView === 'resources' ? 'text-primary' : 'text-gray-400 group-hover:text-[#9fd169]'} transition-colors`} />
-              <span className={`${activeView === 'resources' ? 'text-primary' : 'group-hover:text-[#9fd169]'} transition-colors`}>Resources</span>
+              <BookOpen size={20} className={`mr-3 ${activeView === 'resources' ? 'text-green-600' : 'text-gray-400 group-hover:text-green-600'} transition-colors`} />
+              <span className={`${activeView === 'resources' ? 'text-green-600' : 'group-hover:text-green-600'} transition-colors`}>Resources</span>
             </a>
           </nav>
           
@@ -595,34 +631,40 @@ const FarmizzDashboard = () => {
               <a 
                 href="#" 
                 onClick={(e) => {e.preventDefault(); handleMenuClick('settings')}}
-                className={`flex items-center px-4 py-4 font-medium text-dark hover:bg-green-50 rounded-md transition-colors relative group ${activeView === 'settings' ? 'bg-green-50' : ''}`}
+                className={`flex items-center px-4 py-4 font-medium text-gray-700 hover:bg-green-50 rounded-md transition-colors relative group ${activeView === 'settings' ? 'bg-green-50' : ''}`}
               >
                 <div className={`absolute left-0 w-1 h-full bg-green-600 rounded-r-md ${activeView === 'settings' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}></div>
-                <Settings size={20} className={`mr-3 ${activeView === 'settings' ? 'text-green-700' : 'text-gray-400 group-hover:text-green-700'} transition-colors`} />
-                <span className={`${activeView === 'settings' ? 'text-green-700' : 'group-hover:text-green-700'} transition-colors`}>Settings</span>
+                <Settings size={20} className={`mr-3 ${activeView === 'settings' ? 'text-green-600' : 'text-gray-400 group-hover:text-green-600'} transition-colors`} />
+                <span className={`${activeView === 'settings' ? 'text-green-600' : 'group-hover:text-green-600'} transition-colors`}>Settings</span>
               </a>
               
               <a 
                 href="#" 
                 onClick={(e) => {e.preventDefault(); handleMenuClick('help')}}
-                className={`flex items-center px-4 py-4 font-medium text-dark hover:bg-green-50 rounded-md transition-colors relative group ${activeView === 'help' ? 'bg-green-50' : ''}`}
+                className={`flex items-center px-4 py-4 font-medium text-gray-700 hover:bg-green-50 rounded-md transition-colors relative group ${activeView === 'help' ? 'bg-green-50' : ''}`}
               >
                 <div className={`absolute left-0 w-1 h-full bg-green-600 rounded-r-md ${activeView === 'help' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}></div>
-                <HelpCircle size={20} className={`mr-3 ${activeView === 'help' ? 'text-green-700' : 'text-gray-400 group-hover:text-green-700'} transition-colors`} />
-                <span className={`${activeView === 'help' ? 'text-green-700' : 'group-hover:text-green-700'} transition-colors`}>Help Center</span>
+                <HelpCircle size={20} className={`mr-3 ${activeView === 'help' ? 'text-green-600' : 'text-gray-400 group-hover:text-green-600'} transition-colors`} />
+                <span className={`${activeView === 'help' ? 'text-green-600' : 'group-hover:text-green-600'} transition-colors`}>Help Center</span>
               </a>
             </div>
           </div>
         </aside>
 
-        {/* Main content area */}
-        <main className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${isSidebarOpen ? '' : 'pl-6'}`}>
-          {/* User profile section with proper full-width border bottom */}
-          <div className="w-full pb-4">
-            <div className="flex justify-between w-full py-4 items-center px-7">
-              {/* Page title and welcome message */}
+        {/* Mobile overlay */}
+        {isMobile && isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-white bg-opacity-5 "
+            onClick={toggleSidebar}
+          ></div>
+        )}
+
+        {/* Main content */}
+        <main className={`flex-1 flex flex-col overflow-hidden transition-all duration-300`}>
+          <div className="w-full pb-4 bg-white">
+            <div className="flex flex-col lg:flex-row justify-between w-full py-4 items-start lg:items-center px-4 lg:px-7 gap-4 lg:gap-0">
               <div className="flex flex-col gap-1">
-                <h2 className="text-dark font-bold text-[1.4rem]">
+                <h2 className="text-gray-800 font-bold text-[1.2rem] lg:text-[1.4rem]">
                   {activeView === 'dashboard' ? 'Dashboard' : 
                    activeView === 'weather' ? 'Weather Forecast' : 
                    activeView === 'crops' ? 'My Crops' : 
@@ -633,11 +675,10 @@ const FarmizzDashboard = () => {
                    activeView === 'settings' ? 'Settings' : 
                    activeView === 'help' ? 'Help Center' : 'Dashboard'}
                 </h2>
-                <p className="text-dark font-normal text-[1rem]">Welcome Back, Farmer! How's your farm doing today?</p>
+                <p className="text-gray-600 font-normal text-[0.9rem] lg:text-[1rem]">Welcome Back, Farmer! How's your farm doing today?</p>
               </div>
 
-              {/* User profile and notifications */}
-              <div className="flex items-center space-x-4"> 
+              <div className="flex items-center space-x-4 w-full lg:w-auto justify-between lg:justify-end"> 
                 <motion.button 
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors relative"
                   animate={{ y: [0, -2, 0] }}
@@ -658,9 +699,9 @@ const FarmizzDashboard = () => {
                       <User size={24} />
                     </button>
                   </div>
-                  <div className="flex flex-col text-dark">
-                    <h2 className="font-semibold text-[1rem]">Farmer</h2>
-                    <p className="font-normal text-[0.7rem]">Premium Account</p>
+                  <div className="flex flex-col text-gray-800">
+                    <h2 className="font-semibold text-[0.9rem] lg:text-[1rem]">Farmer</h2>
+                    <p className="font-normal text-[0.65rem] lg:text-[0.7rem]">Premium Account</p>
                   </div>
                   <div>
                     <ChevronDown size={20}/>
@@ -670,15 +711,13 @@ const FarmizzDashboard = () => {
             </div>
           </div>
           
-          {/* Border that spans the full width */}
-          <div className="w-full border-t border-[#d9d9d9] h-full overflow-hidden">
+          <div className="w-full border-t border-gray-200 flex-1 overflow-auto bg-gray-50">
             {renderView()}
           </div>
           
-          {/* Footer area */}
-          <div className="px-6 py-5 border-t border-[#D9D9D9]">
+          <div className="px-4 lg:px-6 py-5 border-t border-gray-200 bg-white">
             <div className="max-w-3xl mx-auto">
-              {/* Empty for now */}
+              {/* Footer content */}
             </div>
           </div>
         </main>

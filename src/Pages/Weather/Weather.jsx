@@ -233,7 +233,7 @@ const WeatherDashboard = ({ onLocationSelect }) => {
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-xl shadow-lg p-6">
+      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 w-full max-w-full">
         <div className="flex items-center justify-center h-64">
           <Loader className="animate-spin mr-3" size={24} />
           <span className="text-gray-600">Loading weather data...</span>
@@ -243,57 +243,60 @@ const WeatherDashboard = ({ onLocationSelect }) => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-full">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-600 to-blue-600 p-6 text-white">
-        <h2 className="text-2xl font-bold mb-2">Weather & Crop Insights</h2>
-        <p className="text-green-100">Real-time weather data and agricultural recommendations</p>
+      <div className="bg-gradient-to-r from-green-600 to-blue-600 p-4 sm:p-6 text-white">
+        <h2 className="text-xl sm:text-2xl font-bold mb-2">Weather & Crop Insights</h2>
+        <p className="text-green-100 text-sm sm:text-base">Real-time weather data and agricultural recommendations</p>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex border-b border-gray-200">
+      <div className="flex border-b border-gray-200 overflow-x-auto">
         <button
           onClick={() => setActiveTab('current')}
-          className={`px-6 py-3 font-medium ${
+          className={`px-3 sm:px-6 py-3 font-medium text-sm sm:text-base whitespace-nowrap flex items-center ${
             activeTab === 'current'
               ? 'text-green-600 border-b-2 border-green-600 bg-green-50'
               : 'text-gray-600 hover:text-green-600'
           }`}
         >
-          <MapPin className="inline-block mr-2" size={16} />
-          Current Location
+          <MapPin className="mr-1 sm:mr-2" size={16} />
+          <span className="hidden sm:inline">Current Location</span>
+          <span className="sm:hidden">Current</span>
         </button>
         <button
           onClick={() => setActiveTab('neighbors')}
-          className={`px-6 py-3 font-medium ${
+          className={`px-3 sm:px-6 py-3 font-medium text-sm sm:text-base whitespace-nowrap flex items-center ${
             activeTab === 'neighbors'
               ? 'text-green-600 border-b-2 border-green-600 bg-green-50'
               : 'text-gray-600 hover:text-green-600'
           }`}
         >
-          <Navigation className="inline-block mr-2" size={16} />
-          Nearby Areas
+          <Navigation className="mr-1 sm:mr-2" size={16} />
+          <span className="hidden sm:inline">Nearby Areas</span>
+          <span className="sm:hidden">Nearby</span>
         </button>
         <button
           onClick={() => setActiveTab('crops')}
-          className={`px-6 py-3 font-medium ${
+          className={`px-3 sm:px-6 py-3 font-medium text-sm sm:text-base whitespace-nowrap flex items-center ${
             activeTab === 'crops'
               ? 'text-green-600 border-b-2 border-green-600 bg-green-50'
               : 'text-gray-600 hover:text-green-600'
           }`}
         >
-          <Sprout className="inline-block mr-2" size={16} />
-          Crop Recommendations
+          <Sprout className="mr-1 sm:mr-2" size={16} />
+          <span className="hidden sm:inline">Crop Recommendations</span>
+          <span className="sm:hidden">Crops</span>
         </button>
       </div>
 
       {/* Content */}
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
             <div className="flex items-center">
-              <AlertTriangle className="text-red-500 mr-2" size={20} />
-              <span className="text-red-700">{error}</span>
+              <AlertTriangle className="text-red-500 mr-2 flex-shrink-0" size={20} />
+              <span className="text-red-700 text-sm sm:text-base">{error}</span>
             </div>
           </div>
         )}
@@ -302,39 +305,41 @@ const WeatherDashboard = ({ onLocationSelect }) => {
         {activeTab === 'current' && currentWeather && (
           <div className="space-y-6">
             {/* Main Weather Card */}
-            <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-6 text-white">
+            <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-4 sm:p-6 text-white">
               <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="text-xl font-semibold">Current Weather</h3>
-                  <p className="text-blue-100">{currentWeather.location.name}</p>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-lg sm:text-xl font-semibold">Current Weather</h3>
+                  <p className="text-blue-100 text-sm sm:text-base truncate">{currentWeather.location.name}</p>
                 </div>
-                {getWeatherIcon(currentWeather.data.values.weatherCode, 48)}
+                <div className="flex-shrink-0 ml-2">
+                  {getWeatherIcon(currentWeather.data.values.weatherCode, window.innerWidth < 640 ? 36 : 48)}
+                </div>
               </div>
 
-              <div className="flex items-center mb-4">
-                <span className="text-4xl font-bold">
+              <div className="flex items-center mb-4 flex-wrap">
+                <span className="text-3xl sm:text-4xl font-bold mr-3">
                   {convertTemp(currentWeather.data.values.temperature, unit)}°{unit}
                 </span>
-                <span className="ml-3 text-blue-100">
+                <span className="text-blue-100 text-sm sm:text-base">
                   {getWeatherDescription(currentWeather.data.values.weatherCode)}
                 </span>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 text-center">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
                 <div>
                   <Droplets className="mx-auto mb-1" size={16} />
                   <p className="text-xs text-blue-200">Humidity</p>
-                  <p className="font-semibold">{Math.round(currentWeather.data.values.humidity)}%</p>
+                  <p className="font-semibold text-sm sm:text-base">{Math.round(currentWeather.data.values.humidity)}%</p>
                 </div>
                 <div>
                   <Wind className="mx-auto mb-1" size={16} />
                   <p className="text-xs text-blue-200">Wind Speed</p>
-                  <p className="font-semibold">{Math.round(currentWeather.data.values.windSpeed * 3.6)} km/h</p>
+                  <p className="font-semibold text-sm sm:text-base">{Math.round(currentWeather.data.values.windSpeed * 3.6)} km/h</p>
                 </div>
                 <div>
                   <Eye className="mx-auto mb-1" size={16} />
                   <p className="text-xs text-blue-200">Visibility</p>
-                  <p className="font-semibold">{Math.round(currentWeather.data.values.visibility || 10)} km</p>
+                  <p className="font-semibold text-sm sm:text-base">{Math.round(currentWeather.data.values.visibility || 10)} km</p>
                 </div>
               </div>
 
@@ -362,11 +367,13 @@ const WeatherDashboard = ({ onLocationSelect }) => {
                 }`}
               >
                 <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 className="font-semibold text-gray-800">{weather.location.name}</h4>
-                    <p className="text-sm text-gray-500">{weather.location.distance} away</p>
+                  <div className="min-w-0 flex-1">
+                    <h4 className="font-semibold text-gray-800 text-sm sm:text-base truncate">{weather.location.name}</h4>
+                    <p className="text-xs sm:text-sm text-gray-500">{weather.location.distance} away</p>
                   </div>
-                  {!weather.error && getWeatherIcon(weather.data.values.weatherCode, 32)}
+                  <div className="flex-shrink-0 ml-2">
+                    {!weather.error && getWeatherIcon(weather.data.values.weatherCode, 32)}
+                  </div>
                 </div>
 
                 {weather.error ? (
@@ -374,10 +381,10 @@ const WeatherDashboard = ({ onLocationSelect }) => {
                 ) : (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-gray-800">
+                      <span className="text-xl sm:text-2xl font-bold text-gray-800">
                         {convertTemp(weather.data.values.temperature, unit)}°{unit}
                       </span>
-                      <span className="text-sm text-gray-600">
+                      <span className="text-xs sm:text-sm text-gray-600 text-right">
                         {getWeatherDescription(weather.data.values.weatherCode)}
                       </span>
                     </div>
@@ -396,11 +403,11 @@ const WeatherDashboard = ({ onLocationSelect }) => {
         {activeTab === 'crops' && currentWeather && (
           <div className="space-y-6">
             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <h3 className="font-semibold text-green-800 mb-2 flex items-center">
-                <TrendingUp className="mr-2" size={20} />
-                Recommended Crops for Current Conditions
+              <h3 className="font-semibold text-green-800 mb-2 flex items-center text-sm sm:text-base">
+                <TrendingUp className="mr-2 flex-shrink-0" size={20} />
+                <span>Recommended Crops for Current Conditions</span>
               </h3>
-              <p className="text-green-700 text-sm">
+              <p className="text-green-700 text-xs sm:text-sm">
                 Based on temperature: {convertTemp(currentWeather.data.values.temperature, unit)}°{unit}, 
                 humidity: {Math.round(currentWeather.data.values.humidity)}%
               </p>
@@ -422,10 +429,10 @@ const WeatherDashboard = ({ onLocationSelect }) => {
                   }`}
                 >
                   <div className="flex items-center mb-2">
-                    <span className="text-2xl mr-2">{rec.icon}</span>
-                    <h4 className="font-semibold text-gray-800">{rec.crop}</h4>
+                    <span className="text-xl sm:text-2xl mr-2 flex-shrink-0">{rec.icon}</span>
+                    <h4 className="font-semibold text-gray-800 text-sm sm:text-base">{rec.crop}</h4>
                   </div>
-                  <p className="text-sm text-gray-600 mb-2">{rec.reason}</p>
+                  <p className="text-xs sm:text-sm text-gray-600 mb-2">{rec.reason}</p>
                   <span className={`inline-block px-2 py-1 text-xs rounded-full ${
                     rec.priority === 'high' 
                       ? 'bg-green-200 text-green-800' 
@@ -439,8 +446,8 @@ const WeatherDashboard = ({ onLocationSelect }) => {
 
             {/* Additional farming tips */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h4 className="font-semibold text-blue-800 mb-2">Current Weather Farming Tips</h4>
-              <ul className="text-sm text-blue-700 space-y-1">
+              <h4 className="font-semibold text-blue-800 mb-2 text-sm sm:text-base">Current Weather Farming Tips</h4>
+              <ul className="text-xs sm:text-sm text-blue-700 space-y-1">
                 {currentWeather.data.values.humidity > 70 && (
                   <li>• High humidity - Monitor for fungal diseases</li>
                 )}

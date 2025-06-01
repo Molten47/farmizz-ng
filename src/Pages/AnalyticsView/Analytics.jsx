@@ -4,7 +4,7 @@ import { Download, FileText, Calendar, TrendingUp, DollarSign, Droplets, BarChar
 
 const AnalyticsView = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('current');
-  const [selectedMetric, setSelectedMetric] = useState('yield');
+  const [selectedMetric, setSelectedMetric] = useState('yield'); // Still unused, consider if needed
 
   // Sample data - replace with your actual data
   const yieldData = [
@@ -350,31 +350,36 @@ const AnalyticsView = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 analytics-dashboard">
-      <div className="max-w-7xl mx-auto">
+    <>
+
+      <div className="min-h-screen bg-gray-50 p-6 analytics-dashboard">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex justify-between items-center">
-            <div className="flex gap-4">
-              <select 
-                value={selectedPeriod}
-                onChange={(e) => setSelectedPeriod(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              >
-                <option value="current">Current Season</option>
-                <option value="last">Last Season</option>
-                <option value="year">Full Year</option>
-              </select>
-              <button 
-                onClick={handleExport}
-                className="flex items-center gap-2 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-              >
-                <Download size={20} />
-                Export Report
-              </button>
-            </div>
+          {/* Changed this div for better mobile responsiveness */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            {/* Period Selection */}
+            <select
+              value={selectedPeriod}
+              onChange={(e) => setSelectedPeriod(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent w-full sm:w-auto"
+            >
+              <option value="current">Current Season</option>
+              <option value="last">Last Season</option>
+              <option value="year">Full Year</option>
+            </select>
+            {/* Export Button */}
+            <button
+              onClick={handleExport}
+              className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors w-full sm:w-auto text-sm sm:text-base"
+            >
+              <Download size={18} /> {/* Slightly smaller icon for mobile */}
+              <span className="hidden sm:inline">Export Report</span> {/* Full text on larger screens */}
+              <span className="sm:hidden">Export</span> {/* Shorter text for mobile */}
+            </button>
           </div>
         </div>
+
+        {/* ... Rest of your dashboard content (Key Metrics, Charts Grid, Full Width Charts, Summary Statistics) remains unchanged ... */}
 
         {/* Key Metrics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -416,7 +421,7 @@ const AnalyticsView = () => {
           </div>
         </div>
 
-        {/* Charts Grid */}
+        {/* Charts Grid - Changed from grid-cols-1 lg:grid-cols-2 to grid-cols-1 lg:grid-cols-2 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Yield by Crop Bar Chart */}
           <div className="bg-white p-6 rounded-lg shadow-sm">
@@ -546,7 +551,7 @@ const AnalyticsView = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
