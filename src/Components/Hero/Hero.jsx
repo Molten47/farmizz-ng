@@ -10,6 +10,7 @@ const Hero = () => {
       {/* Background Video */}
       <div className='absolute inset-0 w-full h-full z-0'>
         <video 
+        
           autoPlay 
           loop 
           muted 

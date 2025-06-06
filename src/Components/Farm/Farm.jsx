@@ -57,6 +57,7 @@ const Farm = () => {
             {/* */}
             <div className='relative rounded-2xl overflow-hidden shadow-2xl'>
               <img 
+                loading='lazy'
                 src={techImage} 
                 alt="Technology in agriculture" 
                 className='w-full h-[32rem] object-cover'
@@ -98,6 +99,7 @@ const Farm = () => {
             {/* Left: Image */}
             <div className='relative rounded-2xl overflow-hidden shadow-2xl order-2 md:order-1'>
               <img 
+                loading='lazy'
                 src={sustainabilityImage} 
                 alt="Sustainable farming" 
                 className='w-full h-[32rem] object-cover'
@@ -223,6 +225,7 @@ const Farm = () => {
             {/* Right: Image */}
             <div className='relative rounded-2xl overflow-hidden shadow-2xl'>
               <img 
+                loading='lazy'
                 src={aboutUsImage} 
                 alt="Farmizz team" 
                 className='w-full h-[32rem] object-cover'
@@ -264,6 +267,7 @@ const Farm = () => {
             {/* Left: Image */}
             <div className='relative rounded-2xl overflow-hidden shadow-2xl order-2 md:order-1'>
               <img 
+                loading='lazy'
                 src={contactImage} 
                 alt="Contact Farmizz" 
                 className='w-full h-[40rem] object-center object-cover'

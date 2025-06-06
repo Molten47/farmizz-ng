@@ -43,6 +43,7 @@ const Fruits = () => {
             {/* Image */}
             <div className='h-100 overflow-hidden'>
               <img 
+                loading='lazy'
                 src={item.image} 
                 alt={item.tag} 
                 className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
